@@ -1,0 +1,22 @@
+{
+	"name": "Link collector",
+	"description": "A tool to help with getting lists of links from webpages.",
+	"version": "0.1",
+	"manifest_version": 3,
+	"permissions": [
+		"contextMenus",
+		"scripting"
+	],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"commands": {
+		"add-link": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+X",
+				"mac": "Command+Shift+X"
+			},
+			"description": "Add selected text with a link to the links list."
+		}
+	}
+}
