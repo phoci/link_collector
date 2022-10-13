@@ -5,18 +5,27 @@
 	"manifest_version": 3,
 	"permissions": [
 		"contextMenus",
-		"scripting"
+		"scripting",
+		"clipboardWrite"
 	],
 	"background": {
 		"service_worker": "background.js"
 	},
 	"commands": {
-		"add-link": {
+		"copy-to-clipboard": {
 			"suggested_key": {
 				"default": "Ctrl+Shift+X",
 				"mac": "Command+Shift+X"
 			},
-			"description": "Add selected text with a link to the links list."
+			"description": "Copy current links list to the clipboard."
 		}
-	}
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [ "content.js" ]
+		}
+	]
 }
