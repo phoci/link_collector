@@ -6,10 +6,34 @@ chrome.contextMenus.create({
     contexts: ["selection"],
 })
 
+function addToLinksList(text, tab) {
+    console.log(text + " " + tab.url + "\n");
+    links.set(tab.url, text)
+    console.log(links)
+}
+
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     addToLinksList(info.selectionText, tab)
 }
 )
+
+async function getCurrentTab() {
+    let queryOptions = { active: true, currentWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    return tab;
+}
+
+function injectedFunction_egrave(textToCopy) {
+    let input = document.createElement('textarea');
+    input.value = textToCopy;
+    input.setAttribute('readonly', '');
+    input.style.position = 'absolute';
+    input.style.left = '-9999px';
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+}
 
 chrome.commands.onCommand.addListener((command) => {
     if (command == "copy-to-clipboard") {
@@ -19,19 +43,15 @@ chrome.commands.onCommand.addListener((command) => {
             console.log(v + " " + k + "\n");
             textToCopy = textToCopy + (v + " " + k + "\n");
         }
-        //
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id,
-                {
-                    message: "copyText",
-                    textToCopy: textToCopy
-                }, function (response) { })
-        })
+        getCurrentTab().then(function (tab) {
+            console.log("hello");
+            console.log(tab);
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: injectedFunction_egrave,
+                args: [textToCopy]
+            });
+        });
     }
-})
-
-function addToLinksList(text, tab) {
-    console.log(text + " " + tab.url + "\n");
-    links.set(tab.url, text)
-    console.log(links)
 }
+)
