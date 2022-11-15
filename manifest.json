@@ -20,5 +20,8 @@
 			},
 			"description": "Copy current links list to the clipboard."
 		}
+	},
+	"action": {
+		"default_popup": "popup.html"
 	}
 }

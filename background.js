@@ -55,3 +55,27 @@ chrome.commands.onCommand.addListener((command) => {
     }
 }
 )
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    switch (request.contentScriptQuery) {
+        case "msgCopyList":
+            textToCopy = ""
+            for (let [k, v] of links) {
+                console.log(v + " " + k + "\n");
+                textToCopy = textToCopy + (v + " " + k + "\n");
+            }
+            getCurrentTab().then(function (tab) {
+                console.log("hello");
+                console.log(tab);
+                chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    function: injectedFunction_egrave,
+                    args: [textToCopy]
+                });
+            });
+            break;
+        case "msgClearList":
+            links.clear();
+    }
+    return true;
+});
