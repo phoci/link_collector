@@ -44,7 +44,6 @@ chrome.commands.onCommand.addListener((command) => {
             textToCopy = textToCopy + (v + " " + k + "\n");
         }
         getCurrentTab().then(function (tab) {
-            console.log("hello");
             console.log(tab);
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
@@ -65,7 +64,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 textToCopy = textToCopy + (v + " " + k + "\n");
             }
             getCurrentTab().then(function (tab) {
-                console.log("hello");
+                console.log("copy through popup");
                 console.log(tab);
                 chrome.scripting.executeScript({
                     target: { tabId: tab.id },
@@ -77,5 +76,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         case "msgClearList":
             links.clear();
     }
+    console.log("message recieved on background worker")
     return true;
 });
